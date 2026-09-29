@@ -1,6 +1,6 @@
 import java.util.Scanner;
 import java.util.Vector;
-
+//maligno malefico se vc ta lendo isso o desenvolvimento comeca dps ok mt barulho na sala 
 public class MaiorVetorAproximado {
     public static void main(String[] args) {
         Scanner teclado = new Scanner(System.in);
