@@ -1,3 +1,7 @@
 # Sobre a prova
 
-Oii ainda não tem a proposta só coloquei aqui mesmo
+## Grupo: 08
+
+### Relatório
+
+Começamos com a organização
