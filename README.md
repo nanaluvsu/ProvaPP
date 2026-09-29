@@ -2,6 +2,6 @@
 
 ## Grupo: 08
 
-### Relatório
+## Como executar
 
-Começamos com a organização
+rodar com ```bash java -Xmx8g MaiorVetorAproximado.java```
