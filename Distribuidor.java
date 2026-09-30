@@ -35,6 +35,14 @@ public class Distribuidor extends Thread {
         }
         teclado.close();
         this.vetor = vector;
+
+        Processadora[] threads = new Processadora[qtdProcessadores - 1];
+
+        for (int i = 0; i < qtdProcessadores - 1; i++) {
+            threads[i] = new Processadora(vetor);
+            threads[i].start();
+        }
+
     }
     
 }
