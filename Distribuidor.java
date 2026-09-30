@@ -41,6 +41,7 @@ public class Distribuidor extends Thread {
         for (int i = 0; i < qtdProcessadores - 1; i++) {
             threads[i] = new Processadora(vetor);
             threads[i].start();
+            
         }
 
     }
