@@ -9,8 +9,7 @@ public class Processadora extends Thread {
 
     public Processadora(Vector<Byte> vetor) {
         this.vetor = vetor;
-        this.inicio = 
-        this.fim = fim;
+
         
     }
 
@@ -21,10 +20,6 @@ public class Processadora extends Thread {
     @Override
     public void run() {
         long inicioTempo = System.currentTimeMillis();
-
-
-
-
 
         long fimTempo = System.currentTimeMillis();
         long duracao = fimTempo - inicioTempo;
