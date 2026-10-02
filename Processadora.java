@@ -77,6 +77,7 @@ public class Processadora extends Thread { // Classes processadoras são as orde
         System.out.println(getName() + " ordenou [" + inicio + ", " + (fim - 1) + "]");
         long fimTempo = System.currentTimeMillis();
         long duracao = fimTempo - inicioTempo;
+        
         System.out.println(getName() + " duracao: " + duracao + " ms");
     }
 }

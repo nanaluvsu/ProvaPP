@@ -7,29 +7,36 @@ public class Distribuidor extends Thread {
     int qtdProcessadores = Runtime.getRuntime().availableProcessors();
     private long duracao = 0;
     Processadora[] threadsProcessadoras;
+    private Vector<Long> duracoesThreads = new Vector<>();
 
     public long getDuracao() {
         return duracao;
     }
 
-    public Distribuidor() {
-        threadsProcessadoras = new Processadora[qtdProcessadores];
+    public Vector<Long> getDuracoesThreads() {
+        return duracoesThreads;
     }
+
+    public void setDuracoesThreads(Vector<Long> duracoesThreads) {
+        this.duracoesThreads = duracoesThreads;
+    }
+
+
 
     public void run() {
         long inicioTempo = System.currentTimeMillis();
-        Scanner teclado = new Scanner(System.in);
+        Scanner teclado1 = new Scanner(System.in);
         Vector<Byte> vector = new Vector<>();
         System.out.println("Digite o tamanho do vetor: ");
-        int size = teclado.nextInt();
+        int size = teclado1.nextInt();
         System.out.println("Deseja preencher o vetor manualmente ou com valores aleatorios?");
         System.out.println("[1] Manualmente [2] Aleatorios");
         System.out.println("Em caso de opcao invalida, o vetor sera preenchido com valores aleatorios.");
-        int opcao = teclado.nextInt();
+        int opcao = teclado1.nextInt();
         if (opcao == 1) {
             for (int i = 0; i < size; i++) {
                 System.out.printf("Digite o valor do elemento %d: ", i);
-                byte valor = teclado.nextByte();
+                byte valor = teclado1.nextByte();
                 vector.add(valor);
             }
         } else {
@@ -38,7 +45,7 @@ public class Distribuidor extends Thread {
                 vector.add(valor);
             }
         }
-        teclado.close();
+        teclado1.close();
         this.vetor = vector;
 
         int qtdThreads = qtdProcessadores - 1; 
@@ -65,6 +72,17 @@ public class Distribuidor extends Thread {
 
             inicio = fim; //proxima thread começa do fim da anterior
         }
+        // ao final, o Distribuidor utiliza join() para aguardar a conclusão de todas as threads Processadoras antes de prosseguir. Isso garante que o vetor seja totalmente ordenado antes de qualquer operação subsequente.
+        for (int i = 0; i < qtdThreads; i++) {
+            try {
+                threads[i].join();
+                duracoesThreads.add(threads[i].getDuracao());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        
+
         long fimTempo = System.currentTimeMillis();
         duracao = fimTempo - inicioTempo;
 

@@ -5,6 +5,11 @@ import java.io.IOException;
 
 public class ProgramaSemParalelismo {
 
+    private long duracao;
+
+    public long getDuracao() {
+        return duracao;
+    }
     private void mergeSort(Vector<Byte> vetor, int inicio, int fim) {
         if (inicio >= fim) {
             return;
@@ -56,9 +61,7 @@ public class ProgramaSemParalelismo {
         }
 
     }
-
-    public static void main(String[] args) {
-        
+    public void mergeExecute() {
         Scanner teclado = new Scanner(System.in);
         Vector<Byte> vetor = new Vector<>();
         System.out.println("Digite o tamanho do vetor: ");
@@ -81,11 +84,12 @@ public class ProgramaSemParalelismo {
         }
 
         ProgramaSemParalelismo programa = new ProgramaSemParalelismo();
-        long inicioTempo = System.currentTimeMillis();
+        //long inicioTempo = System.currentTimeMillis(); // Tempo em ms está em 0, testando com nano
+        long inicioTempo = System.currentTimeMillis(); // Tempo em ns
         programa.mergeSort(vetor, 0, vetor.size() - 1);
         long fimTempo = System.currentTimeMillis();
 
-        long duracao = fimTempo - inicioTempo;
+        this.duracao = fimTempo - inicioTempo;
 
         System.out.println("Deseja imprimir o vetor ordenado? [1] Sim [2] Nao");
         opcao = teclado.nextInt();

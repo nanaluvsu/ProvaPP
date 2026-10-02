@@ -25,3 +25,11 @@
 ### 02/10/2026, 17:11
 
 - Retomando desenvolvimento do programa sem paralelismo.
+
+### 02/10/2026, 18:23
+
+- Finalizado (por agora) desenvolvimento do programa sem paralelismo.
+
+### 02/10/2026, 19:43
+
+- Tentando corrigir erro com uso de múltiplos Scanners.
