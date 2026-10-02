@@ -1,7 +1,11 @@
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.InputMismatchException;
 
 public class Distribuidor extends Thread {
+    private static final Logger LOGGER = LogUtil.logger(Distribuidor.class);
     Vector<Byte> vetor;
     int n;
     int qtdProcessadores = Runtime.getRuntime().availableProcessors();
@@ -9,83 +13,102 @@ public class Distribuidor extends Thread {
     Processadora[] threadsProcessadoras;
     private Vector<Long> duracoesThreads = new Vector<>();
 
-    public long getDuracao() {
-        return duracao;
-    }
-
-    public Vector<Long> getDuracoesThreads() {
-        return duracoesThreads;
-    }
-
+    public long getDuracao() { return duracao; }
+    public Vector<Long> getDuracoesThreads() { return duracoesThreads; }
     public void setDuracoesThreads(Vector<Long> duracoesThreads) {
         this.duracoesThreads = duracoesThreads;
     }
 
-
-
+    @Override
     public void run() {
         long inicioTempo = System.currentTimeMillis();
-        Scanner teclado1 = new Scanner(System.in);
+        Scanner teclado = LogUtil.scanner();
         Vector<Byte> vector = new Vector<>();
-        System.out.println("Digite o tamanho do vetor: ");
-        int size = teclado1.nextInt();
-        System.out.println("Deseja preencher o vetor manualmente ou com valores aleatorios?");
-        System.out.println("[1] Manualmente [2] Aleatorios");
-        System.out.println("Em caso de opcao invalida, o vetor sera preenchido com valores aleatorios.");
-        int opcao = teclado1.nextInt();
-        if (opcao == 1) {
-            for (int i = 0; i < size; i++) {
-                System.out.printf("Digite o valor do elemento %d: ", i);
-                byte valor = teclado1.nextByte();
-                vector.add(valor);
+        try {
+            System.out.println("Digite o tamanho do vetor:");
+            int size = lerInteiro(teclado, "tamanho do vetor");
+            if (size <= 0) {
+                LOGGER.warning("Tamanho de vetor inválido: " + size);
+                System.out.println("O tamanho do vetor deve ser maior que zero.");
+                return;
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                byte valor = (byte) (Math.random() * 100);
-                vector.add(valor);
+
+            System.out.println("Deseja preencher o vetor manualmente ou com valores aleatorios?");
+            System.out.println("[1] Manualmente [2] Aleatorios");
+            System.out.println("Em caso de opcao invalida, o vetor sera preenchido com valores aleatorios.");
+            int opcao = lerInteiro(teclado, "opção de preenchimento");
+            if (opcao == 1) {
+                for (int i = 0; i < size; i++) {
+                    System.out.printf("Digite o valor do elemento %d (-128 a 127): ", i);
+                    int entrada = lerInteiro(teclado, "elemento do vetor");
+                    if (entrada < Byte.MIN_VALUE || entrada > Byte.MAX_VALUE) {
+                        LOGGER.warning("Valor fora do intervalo byte no índice " + i + ": " + entrada);
+                        System.out.println("Valor inválido. Digite um número entre -128 e 127.");
+                        i--;
+                        continue;
+                    }
+                    vector.add((byte) entrada);
+                }
+            } else {
+                if (opcao != 2) LOGGER.warning("Opção de preenchimento inválida (" + opcao + "); usando valores aleatórios.");
+                for (int i = 0; i < size; i++) vector.add((byte) (Math.random() * 100));
             }
+            this.vetor = vector;
+            LOGGER.info("Vetor criado com " + size + " elementos.");
+
+            int qtdThreads = Math.max(1, qtdProcessadores - 1);
+            qtdThreads = Math.min(qtdThreads, vetor.size());
+            int base = vetor.size() / qtdThreads;
+            int resto = vetor.size() % qtdThreads;
+            Processadora[] threads = new Processadora[qtdThreads];
+            this.threadsProcessadoras = threads;
+            int inicio = 0;
+
+            for (int i = 0; i < qtdThreads; i++) {
+                int fim = inicio + base + (i < resto ? 1 : 0);
+                if (fim > vetor.size()) {
+                    LOGGER.warning("Índice final excedeu o vetor; ajustando para " + vetor.size() + ".");
+                    fim = vetor.size();
+                }
+                threads[i] = new Processadora(vetor, inicio, fim);
+                threads[i].setName("Processadora " + (i + 1));
+                LOGGER.info("Iniciando " + threads[i].getName() + " para índices [" + inicio + ", " + (fim - 1) + "].");
+                threads[i].start();
+                inicio = fim;
+            }
+
+            for (Processadora thread : threads) {
+                try {
+                    thread.join();
+                    duracoesThreads.add(thread.getDuracao());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    LOGGER.log(Level.WARNING, "Distribuidor interrompido ao aguardar " + thread.getName() + ".", e);
+                    return;
+                }
+            }
+            LOGGER.info("Todas as processadoras concluíram a ordenação.");
+        } catch (InputMismatchException e) {
+            LOGGER.log(Level.WARNING, "Entrada inválida durante a distribuição do vetor.", e);
+            System.out.println("Entrada inválida. Informe números inteiros válidos.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            LOGGER.log(Level.SEVERE, "Erro ao preparar ou distribuir o vetor.", e);
+            System.out.println("Não foi possível distribuir o vetor: " + e.getMessage());
+        } catch (RuntimeException e) {
+            LOGGER.log(Level.SEVERE, "Erro inesperado no Distribuidor.", e);
+            System.out.println("Ocorreu um erro inesperado durante a execução.");
+        } finally {
+            duracao = System.currentTimeMillis() - inicioTempo;
+            LOGGER.info("Execução do Distribuidor finalizada em " + duracao + " ms.");
         }
-        teclado1.close();
-        this.vetor = vector;
-
-        int qtdThreads = qtdProcessadores - 1; 
-        int base = vetor.size() / qtdThreads; // Tamanho base de cada thread
-        int resto = vetor.size() % qtdThreads; //Como o vetor pode não ser divisível, é importante considerar o resto na equação.
-        Processadora[] threads = new Processadora[qtdProcessadores - 1];
-        int inicio = 0;
-        
-        for (int i = 0; i < qtdThreads; i++) {
-            int fim = inicio + base;
-
-            if (i < resto) {
-                fim++;
-            }
-
-            if (fim > vetor.size()) {
-                System.out.println("indice final ultrapassa o tamanho do vetor. Ajustando para o tamanho maximo.");
-                fim = vetor.size();
-            }
-
-            threads[i] = new Processadora(vetor, inicio, fim);
-            threads[i].setName("Processadora " + (i + 1));
-            threads[i].start();
-
-            inicio = fim; //proxima thread começa do fim da anterior
-        }
-        // ao final, o Distribuidor utiliza join() para aguardar a conclusão de todas as threads Processadoras antes de prosseguir. Isso garante que o vetor seja totalmente ordenado antes de qualquer operação subsequente.
-        for (int i = 0; i < qtdThreads; i++) {
-            try {
-                threads[i].join();
-                duracoesThreads.add(threads[i].getDuracao());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        
-
-        long fimTempo = System.currentTimeMillis();
-        duracao = fimTempo - inicioTempo;
-
     }
-    
+
+    private int lerInteiro(Scanner teclado, String campo) {
+        if (!teclado.hasNextInt()) {
+            String recebido = teclado.hasNext() ? teclado.next() : "fim da entrada";
+            LOGGER.warning("Entrada não inteira para " + campo + ": " + recebido);
+            throw new InputMismatchException("Era esperado um número inteiro para " + campo + ".");
+        }
+        return teclado.nextInt();
+    }
 }

@@ -1,0 +1,3 @@
+- O Merge Sort foi preservado nos dois modos.
+- Como os valores do vetor são do tipo byte, entradas manuais são limitadas a -128..127.
+- O Scanner compartilhado não é fechado no meio da aplicação, evitando encerrar System.in antes do fim.
