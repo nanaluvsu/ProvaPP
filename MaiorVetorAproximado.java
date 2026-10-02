@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.Vector;
 //maligno malefico se vc ta lendo isso o desenvolvimento comeca dps ok mt barulho na sala 
 public class MaiorVetorAproximado {
     public static void main(String[] args) {
@@ -10,7 +9,7 @@ public class MaiorVetorAproximado {
         opcao = teclado.nextInt();
         
         if (opcao == 1) {
-            Distribuidor distribuidor = new Distribuidor();
+            Distribuidor distribuidor = new Distribuidor(teclado);
             distribuidor.start();
             
             try {
@@ -29,14 +28,14 @@ public class MaiorVetorAproximado {
                     }
                 }
             }
-            System.out.println("\nDeseja imprimir o tempo de execução de cada thread (incluindo esta)? [1] Sim [2] Nao");
+            System.out.println("\nDeseja imprimir o tempo de execucao de cada thread (incluindo esta)? [1] Sim [2] Nao");
             int tempoOpcao = teclado.nextInt();
             if (tempoOpcao == 1) {
-                System.out.println("Tempo de execução de cada thread:");
+                System.out.println("Tempo de execucao de cada thread:");
                 for (int i = 0; i < distribuidor.getDuracoesThreads().size(); i++) {
                     System.out.printf("Processadora %d: %d ms%n", i + 1, distribuidor.getDuracoesThreads().get(i));
                 }
-                System.out.println("\nTempo de execução de Distribuidor: " + distribuidor.getDuracao() + " ms");
+                System.out.println("\nTempo de execucao de Distribuidor: " + distribuidor.getDuracao() + " ms");
             }
         } else if (opcao == 2) {
             ProgramaSemParalelismo programa = new ProgramaSemParalelismo();

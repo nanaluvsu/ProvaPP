@@ -7,6 +7,7 @@ public class Distribuidor extends Thread {
     int qtdProcessadores = Runtime.getRuntime().availableProcessors();
     private long duracao = 0;
     Processadora[] threadsProcessadoras;
+    Scanner teclado;
     private Vector<Long> duracoesThreads = new Vector<>();
 
     public long getDuracao() {
@@ -21,22 +22,24 @@ public class Distribuidor extends Thread {
         this.duracoesThreads = duracoesThreads;
     }
 
+    public Distribuidor(Scanner teclado) {
+        this.teclado = teclado;
+    }
 
 
     public void run() {
         long inicioTempo = System.currentTimeMillis();
-        Scanner teclado1 = new Scanner(System.in);
         Vector<Byte> vector = new Vector<>();
         System.out.println("Digite o tamanho do vetor: ");
-        int size = teclado1.nextInt();
+        int size = teclado.nextInt();
         System.out.println("Deseja preencher o vetor manualmente ou com valores aleatorios?");
         System.out.println("[1] Manualmente [2] Aleatorios");
         System.out.println("Em caso de opcao invalida, o vetor sera preenchido com valores aleatorios.");
-        int opcao = teclado1.nextInt();
+        int opcao = teclado.nextInt();
         if (opcao == 1) {
             for (int i = 0; i < size; i++) {
                 System.out.printf("Digite o valor do elemento %d: ", i);
-                byte valor = teclado1.nextByte();
+                byte valor = teclado.nextByte();
                 vector.add(valor);
             }
         } else {
@@ -45,7 +48,6 @@ public class Distribuidor extends Thread {
                 vector.add(valor);
             }
         }
-        teclado1.close();
         this.vetor = vector;
 
         int qtdThreads = qtdProcessadores - 1; 
