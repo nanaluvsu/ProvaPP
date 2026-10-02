@@ -1,14 +1,20 @@
 # Sobre a prova
 
 ## Grupo: 08
-### RAs:
+
+### RAs
+
 - 24011150
 - 25007828
 - 23008057
 
 ## Como executar
 
-rodar com ```bash java -Xmx8g MaiorVetorAproximado.java```
+rodar com ```java -Xmx8g MaiorVetorAproximado.java```
+
+***Nota:*** instrução de execução anterior não compila todos os arquivos, logo, é necessário rodar com:
+
+```javac *.java; java -Xmx8G MaiorVetorAproximado```
 
 ## Proposta
 
@@ -23,7 +29,7 @@ Em suma, cada thread ordenadora ordena a parte que lhe cabe recursivamente pelo 
 - Ofereça ao usuário a possibilidade de decidir quantos elementos quer ter no vetor a ser ordenado, bem como de preenchè-lo à mão ou de forma automática com números aleatórios.
 - Ofereça ao usuário, ao final do processo, a opção de decidir printar todo o vetor ordenado ou a parte que decidir printar dele.
 - Capture e trate exceções adequadamente.
-- Use ``` join()```  para aguardar a finalização das threads.
+- Use ```join()```  para aguardar a finalização das threads.
 - Insira mensagens de log informativas em ambos os programas.
 - Faça também um programa que realize a ordenação sem paralelismo.
 - Meça os tempos de execução de ambos os programas para fins de comparação.

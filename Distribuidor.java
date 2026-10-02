@@ -5,21 +5,26 @@ public class Distribuidor extends Thread {
     Vector<Byte> vetor;
     int n;
     int qtdProcessadores = Runtime.getRuntime().availableProcessors();
-
+    long duracao = 0;
     Processadora[] threadsProcessadoras;
+
+    public long getDuracao() {
+        return duracao;
+    }
 
     public Distribuidor() {
         threadsProcessadoras = new Processadora[qtdProcessadores];
     }
 
     public void run() {
+        long inicioTempo = System.currentTimeMillis();
         Scanner teclado = new Scanner(System.in);
         Vector<Byte> vector = new Vector<>();
         System.out.println("Digite o tamanho do vetor: ");
         int size = teclado.nextInt();
-        System.out.println("Deseja preencher o vetor manualmente ou com valores aleatórios?");
-        System.out.println("[1] Manualmente [2] Aleatórios");
-        System.out.println("Em caso de opção inválida, o vetor será preenchido com valores aleatórios.");
+        System.out.println("Deseja preencher o vetor manualmente ou com valores aleatorios?");
+        System.out.println("[1] Manualmente [2] Aleatorios");
+        System.out.println("Em caso de opcao invalida, o vetor sera preenchido com valores aleatorios.");
         int opcao = teclado.nextInt();
         if (opcao == 1) {
             for (int i = 0; i < size; i++) {
@@ -36,13 +41,32 @@ public class Distribuidor extends Thread {
         teclado.close();
         this.vetor = vector;
 
+        int qtdThreads = qtdProcessadores - 1; 
+        int base = vetor.size() / qtdThreads; // Tamanho base de cada thread
+        int resto = vetor.size() % qtdThreads; //Como o vetor pode não ser divisível, é importante considerar o resto na equação.
         Processadora[] threads = new Processadora[qtdProcessadores - 1];
+        int inicio = 0;
+        
+        for (int i = 0; i < qtdThreads; i++) {
+            int fim = inicio + base;
 
-        for (int i = 0; i < qtdProcessadores - 1; i++) {
-            threads[i] = new Processadora(vetor);
+            if (i < resto) {
+                fim++;
+            }
+
+            if (fim > vetor.size()) {
+                System.out.println("indice final ultrapassa o tamanho do vetor. Ajustando para o tamanho maximo.");
+                fim = vetor.size();
+            }
+
+            threads[i] = new Processadora(vetor, inicio, fim);
+            threads[i].setName("Processadora " + (i + 1));
             threads[i].start();
-            
+
+            inicio = fim; //proxima thread começa do fim da anterior
         }
+        long fimTempo = System.currentTimeMillis();
+        duracao = fimTempo - inicioTempo;
 
     }
     
