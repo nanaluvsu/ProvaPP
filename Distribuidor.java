@@ -5,7 +5,7 @@ public class Distribuidor extends Thread {
     Vector<Byte> vetor;
     int n;
     int qtdProcessadores = Runtime.getRuntime().availableProcessors();
-    long duracao = 0;
+    private long duracao = 0;
     Processadora[] threadsProcessadoras;
 
     public long getDuracao() {

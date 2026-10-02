@@ -6,7 +6,7 @@ public class Processadora extends Thread { // Classes processadoras são as orde
     private Vector<Byte> vetor;
     private int inicio;
     private int fim;
-    private byte maior;
+    private long duracao;
 
     public Processadora(Vector<Byte> vetor, int inicio, int fim) {
         this.vetor = vetor;
@@ -14,8 +14,8 @@ public class Processadora extends Thread { // Classes processadoras são as orde
         this.fim = fim;
     }
 
-    public byte getMaior() {
-        return maior;
+    public long getDuracao() {
+        return duracao;
     }
 
     private void mergeSort(Vector<Byte> vetor, int inicio, int fim) {

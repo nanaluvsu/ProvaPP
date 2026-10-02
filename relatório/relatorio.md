@@ -17,3 +17,11 @@
 - Revisão do código e arrumando erros
 - Desenvolvimento do Merge Sort
 - Elaborando display de duração do processo da thread.
+
+### 02/10/2026, 13:22
+
+- Começando o desenvolvimento do programa sem paralelismo.
+
+### 02/10/2026, 17:11
+
+- Retomando desenvolvimento do programa sem paralelismo.

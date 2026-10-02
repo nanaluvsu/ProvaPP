@@ -3,6 +3,7 @@ import java.util.Vector;
 //maligno malefico se vc ta lendo isso o desenvolvimento comeca dps ok mt barulho na sala 
 public class MaiorVetorAproximado {
     public static void main(String[] args) {
+        System.out.println();
         Distribuidor distribuidor = new Distribuidor();
         distribuidor.start();
         /* 

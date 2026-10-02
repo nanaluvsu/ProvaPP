@@ -27,9 +27,23 @@ Em suma, cada thread ordenadora ordena a parte que lhe cabe recursivamente pelo 
 ## Boas práticas exigidas e outras obrigações
 
 - Ofereça ao usuário a possibilidade de decidir quantos elementos quer ter no vetor a ser ordenado, bem como de preenchè-lo à mão ou de forma automática com números aleatórios.
+  
+> Feito
+
 - Ofereça ao usuário, ao final do processo, a opção de decidir printar todo o vetor ordenado ou a parte que decidir printar dele.
+  
+> Parcialmente Feito
+
 - Capture e trate exceções adequadamente.
 - Use ```join()```  para aguardar a finalização das threads.
 - Insira mensagens de log informativas em ambos os programas.
+
+> Feito
+
 - Faça também um programa que realize a ordenação sem paralelismo.
+  
+> Feito
+
 - Meça os tempos de execução de ambos os programas para fins de comparação.
+
+> Feito
