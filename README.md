@@ -36,6 +36,9 @@ Em suma, cada thread ordenadora ordena a parte que lhe cabe recursivamente pelo 
 
 - Capture e trate exceções adequadamente.
 - Use ```join()```  para aguardar a finalização das threads.
+
+> Feito
+
 - Insira mensagens de log informativas em ambos os programas.
 
 > Feito

@@ -6,21 +6,22 @@ public class Distribuidor extends Thread {
     Vector<Byte> vetor;
     int n;
     int qtdProcessadores = Runtime.getRuntime().availableProcessors();
-    private long duracao = 0;
+    private long duracao;
     Processadora[] threadsProcessadoras;
     Scanner teclado;
-    private Vector<Long> duracoesThreads = new Vector<>();
+    private Vector<Long> duracoesThreadsProcessadoras = new Vector<>();
+    private Vector<Long> duracoesThreadsJuntadoras = new Vector<>();
 
     public long getDuracao() {
         return duracao;
     }
 
-    public Vector<Long> getDuracoesThreads() {
-        return duracoesThreads;
+    public Vector<Long> getDuracoesThreadsProcessadoras() {
+        return duracoesThreadsProcessadoras;
     }
 
-    public void setDuracoesThreads(Vector<Long> duracoesThreads) {
-        this.duracoesThreads = duracoesThreads;
+    public Vector<Long> getDuracoesThreadsJuntadoras() {
+        return duracoesThreadsJuntadoras;
     }
 
     public Distribuidor(Scanner teclado) {
@@ -28,11 +29,61 @@ public class Distribuidor extends Thread {
     }
 
 
+    private Vector<Byte> juntarVetoresOrdenados(Vector<Vector<Byte>> vetorJoin) {
+        while (vetorJoin.size() > 1) {
+            Vector<Juntadora> juntadoras = new Vector<>(); // vetor de threads juntadoras
+            Vector<Vector<Byte>> proximaRodada = new Vector<>(); // vetor que armazenará os vetores resultantes da próxima rodada de junção
+
+            for (int i = 0; i + 1 < vetorJoin.size(); i += 2) { //enquanto houver pares de vetores, cria uma thread juntadora para cada par
+                Juntadora juntadora = new Juntadora(vetorJoin.get(i), vetorJoin.get(i + 1));  //cria uma thread juntadora recebendo  
+                juntadora.setName("Juntadora " + (i / 2 + 1)); //nomeia a thread juntadora
+                juntadoras.add(juntadora); //adiciona a thread ao vetor de threads
+                juntadora.start();
+            }
+
+            for (int i = 0; i < juntadoras.size(); i++) { // enquanto houver threads juntadoras, aguarda a conclusão de cada uma e adiciona o resultado ao vetor da próxima rodada
+            try {
+                juntadoras.get(i).join();
+                duracoesThreadsJuntadoras.add(juntadoras.get(i).getDuracao());
+                proximaRodada.add(juntadoras.get(i).getResultado()); //adiciona o resultado da thread juntadora ao vetor da próxima rodada
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+            if (vetorJoin.size() % 2 != 0) {
+                proximaRodada.add(vetorJoin.get(vetorJoin.size() - 1));
+            }
+
+            vetorJoin = proximaRodada;
+        }
+
+        return vetorJoin.get(0);
+
+    }
+
     public void run() {
+        int size = 0;
         long inicioTempo = System.currentTimeMillis();
-        Vector<Byte> vector = new Vector<>();
-        System.out.println("Digite o tamanho do vetor: ");
-        int size = teclado.nextInt();
+        Vector<Byte> vetor = new Vector<>();
+        Vector<Vector<Byte>> vetorJoin = new Vector<>();
+
+        while (true) {
+            System.out.println("Digite o tamanho do vetor: ");
+            try {
+                size = teclado.nextInt();
+                if (size <= 0) {
+                    System.out.println("Tamanho do vetor deve ser um numero positivo.");
+                    teclado.nextLine();
+                    continue;
+                }
+                break;
+            } catch (InputMismatchException ex) {
+                System.out.println("Entrada invalida. Digite um numero inteiro.");
+                teclado.nextLine();
+            }
+        }
+
         System.out.println("Deseja preencher o vetor manualmente ou com valores aleatorios?");
         System.out.println("[1] Manualmente [2] Aleatorios");
         System.out.println("Em caso de opcao invalida, o vetor sera preenchido com valores aleatorios.");
@@ -42,27 +93,31 @@ public class Distribuidor extends Thread {
                 try {
                     System.out.printf("Digite o valor do elemento %d: ", i);
                     byte valor = teclado.nextByte();
-                    vector.add(valor);
+                    vetor.add(valor);
                 } catch (InputMismatchException ex) {
                     System.out.println("Valor excede range de byte.");
-                    teclado.nextLine(); // Limpa scanner
+                    teclado.nextLine();
+                    i--;
                 }
-                
             }
         } else {
             for (int i = 0; i < size; i++) {
-                byte valor = (byte) (Math.random() * 256 - 128); // Valores dentro do range de byte
-                vector.add(valor);
+                byte valor = (byte) (Math.random() * 256 - 128);
+                vetor.add(valor);
             }
         }
-        this.vetor = vector;
+        this.vetor = vetor;
 
-        int qtdThreads = qtdProcessadores - 1; 
-        int base = vetor.size() / qtdThreads; // Tamanho base de cada thread
-        int resto = vetor.size() % qtdThreads; //Como o vetor pode não ser divisível, é importante considerar o resto na equação.
-        Processadora[] threads = new Processadora[qtdProcessadores - 1];
+        int qtdThreads = qtdProcessadores - 1;
+        if (qtdThreads <= 0) {
+            qtdThreads = 1;
+        }
+
+        int base = vetor.size() / qtdThreads;
+        int resto = vetor.size() % qtdThreads;
+        Processadora[] threads = new Processadora[qtdThreads];
         int inicio = 0;
-        
+
         for (int i = 0; i < qtdThreads; i++) {
             int fim = inicio + base;
 
@@ -79,21 +134,23 @@ public class Distribuidor extends Thread {
             threads[i].setName("Processadora " + (i + 1));
             threads[i].start();
 
-            inicio = fim; //proxima thread começa do fim da anterior
+            inicio = fim;
         }
-        // ao final, o Distribuidor utiliza join() para aguardar a conclusão de todas as threads Processadoras antes de prosseguir. Isso garante que o vetor seja totalmente ordenado antes de qualquer operação subsequente.
+
         for (int i = 0; i < qtdThreads; i++) {
             try {
                 threads[i].join();
-                duracoesThreads.add(threads[i].getDuracao());
+                duracoesThreadsProcessadoras.add(threads[i].getDuracao());
+                vetorJoin.add(threads[i].getParteVetor());
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }
-        
+
+        Vector<Byte> vetorOrdenado = juntarVetoresOrdenados(vetorJoin);
+        this.vetor = vetorOrdenado;
         long fimTempo = System.currentTimeMillis();
         duracao = fimTempo - inicioTempo;
-
+        this.duracao = duracao;
     }
-    
 }
