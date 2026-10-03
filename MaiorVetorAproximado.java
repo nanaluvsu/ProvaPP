@@ -38,7 +38,7 @@ public class MaiorVetorAproximado {
                 System.out.println("\nTempo de execucao de Distribuidor: " + distribuidor.getDuracao() + " ms");
             }
         } else if (opcao == 2) {
-            ProgramaSemParalelismo programa = new ProgramaSemParalelismo();
+            ProgramaSemParalelismo programa = new ProgramaSemParalelismo(teclado);
             programa.mergeExecute();
         } else {
             System.out.println("Opcao invalida. Encerrando o programa.");

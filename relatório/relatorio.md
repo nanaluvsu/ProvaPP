@@ -33,3 +33,7 @@
 ### 02/10/2026, 19:43
 
 - Tentando corrigir erro com uso de múltiplos Scanners.
+
+### 02/10/2026, 20:59
+
+- Alterando lógica de uso de teclado entre programas.

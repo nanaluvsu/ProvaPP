@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.InputMismatchException; //InputMismatchException é a mais adequada para valores inadequados
 
 public class Distribuidor extends Thread {
     Vector<Byte> vetor;
@@ -38,13 +39,19 @@ public class Distribuidor extends Thread {
         int opcao = teclado.nextInt();
         if (opcao == 1) {
             for (int i = 0; i < size; i++) {
-                System.out.printf("Digite o valor do elemento %d: ", i);
-                byte valor = teclado.nextByte();
-                vector.add(valor);
+                try {
+                    System.out.printf("Digite o valor do elemento %d: ", i);
+                    byte valor = teclado.nextByte();
+                    vector.add(valor);
+                } catch (InputMismatchException ex) {
+                    System.out.println("Valor excede range de byte.");
+                    teclado.nextLine(); // Limpa scanner
+                }
+                
             }
         } else {
             for (int i = 0; i < size; i++) {
-                byte valor = (byte) (Math.random() * 100);
+                byte valor = (byte) (Math.random() * 256 - 128); // Valores dentro do range de byte
                 vector.add(valor);
             }
         }
@@ -79,12 +86,11 @@ public class Distribuidor extends Thread {
             try {
                 threads[i].join();
                 duracoesThreads.add(threads[i].getDuracao());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
             }
         }
         
-
         long fimTempo = System.currentTimeMillis();
         duracao = fimTempo - inicioTempo;
 

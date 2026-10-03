@@ -1,14 +1,18 @@
 import java.util.Scanner;
 import java.util.Vector;
-import java.io.FileWriter;
-import java.io.IOException;
+
 
 public class ProgramaSemParalelismo {
+    private Scanner teclado;
 
     private long duracao;
 
     public long getDuracao() {
         return duracao;
+    }
+
+    public ProgramaSemParalelismo(Scanner teclado) {
+        this.teclado = teclado;
     }
     private void mergeSort(Vector<Byte> vetor, int inicio, int fim) {
         if (inicio >= fim) {
@@ -62,7 +66,6 @@ public class ProgramaSemParalelismo {
 
     }
     public void mergeExecute() {
-        Scanner teclado = new Scanner(System.in);
         Vector<Byte> vetor = new Vector<>();
         System.out.println("Digite o tamanho do vetor: ");
         int size = teclado.nextInt();
@@ -78,15 +81,14 @@ public class ProgramaSemParalelismo {
             }
         } else {
             for (int i = 0; i < size; i++) {
-                byte valor = (byte) (Math.random() * 100);
+                byte valor = (byte) (Math.random() * 256 - 128);
                 vetor.add(valor);
             }
         }
 
-        ProgramaSemParalelismo programa = new ProgramaSemParalelismo();
         //long inicioTempo = System.currentTimeMillis(); // Tempo em ms está em 0, testando com nano
         long inicioTempo = System.currentTimeMillis(); // Tempo em ns
-        programa.mergeSort(vetor, 0, vetor.size() - 1);
+        mergeSort(vetor, 0, vetor.size() - 1);
         long fimTempo = System.currentTimeMillis();
 
         this.duracao = fimTempo - inicioTempo;
