@@ -37,10 +37,12 @@ public class Distribuidor extends Thread {
         int rodadaExecucao = 1;
         while (vetorJoin.size() > 1) {
             System.out.println("\n\n\n Rodada de execucao: " + rodadaExecucao);
+            System.out.println("Quantidade de vetores antes da rodada: " + vetorJoin.size());
             Vector<Juntadora> juntadoras = new Vector<>(); // vetor de threads juntadoras
             Vector<Vector<Byte>> proximaRodada = new Vector<>(); // vetor que armazenará os vetores resultantes da próxima rodada de junção
 
             for (int i = 0; i + 1 < vetorJoin.size(); i += 2) { //enquanto houver pares de vetores, cria uma thread juntadora para cada par
+                System.out.println("Juntadora " + (i / 2 + 1) + " unindo partes " + i + " e " + (i + 1));
                 Juntadora juntadora = new Juntadora(vetorJoin.get(i), vetorJoin.get(i + 1));  //cria uma thread juntadora recebendo  
                 juntadora.setName("Juntadora " + (i / 2 + 1)); //nomeia a thread juntadora
                 juntadora.start();
@@ -62,9 +64,11 @@ public class Distribuidor extends Thread {
             }
 
             vetorJoin = proximaRodada;
+            System.out.println("Rodada " + rodadaExecucao + " concluida. Vetores restantes: " + vetorJoin.size());
             rodadaExecucao++;
         }
 
+        System.out.println("Vetor final ordenado concluido.");
         return vetorJoin.get(0);
 
     }
@@ -119,6 +123,8 @@ public class Distribuidor extends Thread {
         if (qtdThreads <= 0) {
             qtdThreads = 1;
         }
+
+        System.out.println("Vetor dividido em " + qtdThreads + " partes.");
 
         int base = vetor.size() / qtdThreads;
         int resto = vetor.size() % qtdThreads;
