@@ -62,7 +62,7 @@
 
 ### 02/10/2026, 22:30
 
-- Adição das threads Juntadoras e alteração da lógica de merge.
+- Adicionando as threads Juntadoras e alteração da lógica de merge.
 - Adicionando tratamento de múltiplas exceções e valores que podem quebrar o código.
 - Adicionando retorno da duração das threads.
 
@@ -70,8 +70,8 @@
 
 ### 02/10/2026, 23:30
 
-- Display de rodada.
-- Finalização do merge paralelo.
-- Ajuste do print de vetor.
+- Adicionando Display de rodada.
+- Finalizando do merge paralelo.
+- Ajustando print de vetor.
 
 **Autor(A):** 24011150
