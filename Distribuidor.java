@@ -3,7 +3,7 @@ import java.util.Vector;
 import java.util.InputMismatchException; //InputMismatchException é a mais adequada para valores inadequados
 
 public class Distribuidor extends Thread {
-    Vector<Byte> vetor;
+    private Vector<Byte> vetor;
     int n;
     int qtdProcessadores = Runtime.getRuntime().availableProcessors();
     private long duracao;
@@ -28,17 +28,23 @@ public class Distribuidor extends Thread {
         this.teclado = teclado;
     }
 
+    public Vector<Byte> getVetor() {
+        return vetor;
+    }
+
 
     private Vector<Byte> juntarVetoresOrdenados(Vector<Vector<Byte>> vetorJoin) {
+        int rodadaExecucao = 1;
         while (vetorJoin.size() > 1) {
+            System.out.println("\n\n\n Rodada de execucao: " + rodadaExecucao);
             Vector<Juntadora> juntadoras = new Vector<>(); // vetor de threads juntadoras
             Vector<Vector<Byte>> proximaRodada = new Vector<>(); // vetor que armazenará os vetores resultantes da próxima rodada de junção
 
             for (int i = 0; i + 1 < vetorJoin.size(); i += 2) { //enquanto houver pares de vetores, cria uma thread juntadora para cada par
                 Juntadora juntadora = new Juntadora(vetorJoin.get(i), vetorJoin.get(i + 1));  //cria uma thread juntadora recebendo  
                 juntadora.setName("Juntadora " + (i / 2 + 1)); //nomeia a thread juntadora
-                juntadoras.add(juntadora); //adiciona a thread ao vetor de threads
                 juntadora.start();
+                juntadoras.add(juntadora); //adiciona a thread ao vetor de threads
             }
 
             for (int i = 0; i < juntadoras.size(); i++) { // enquanto houver threads juntadoras, aguarda a conclusão de cada uma e adiciona o resultado ao vetor da próxima rodada
@@ -56,6 +62,7 @@ public class Distribuidor extends Thread {
             }
 
             vetorJoin = proximaRodada;
+            rodadaExecucao++;
         }
 
         return vetorJoin.get(0);

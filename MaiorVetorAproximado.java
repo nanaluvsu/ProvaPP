@@ -32,29 +32,53 @@ public class MaiorVetorAproximado {
                 e.printStackTrace();
             }
             while (true) {
-                try {
-                    System.out.println("Deseja imprimir o vetor ordenado? [1] Sim [2] Nao");
-                    printOpcao = teclado.nextInt();
+    try {
+        System.out.println("Deseja imprimir:");
+        System.out.println("[1] Todo o vetor");
+        System.out.println("[2] Parte especifica do vetor");
+        printOpcao = teclado.nextInt();
 
-                    if (printOpcao == 1 || printOpcao == 2) {
-                        System.out.println("Entrada invalida. Digite 1 para Sim ou 2 para Nao.");
-                        break;
-                    }
+        if (printOpcao == 1 || printOpcao == 2) {
+            break;
+        }
 
-                } catch (InputMismatchException ex) {
-                    System.out.println("Entrada invalida. Digite 1 para Sim ou 2 para Nao.");
-                    teclado.nextLine();
-                }
+        System.out.println("Entrada invalida. Digite 1 ou 2.");
+    } catch (InputMismatchException ex) {
+        System.out.println("Entrada invalida. Digite 1 ou 2.");
+        teclado.nextLine();
+    }
+}
+
+if (printOpcao == 1) {
+    for (int i = 0; i < distribuidor.getVetor().size(); i++) {
+        System.out.print(distribuidor.getVetor().get(i) + " ");
+    }
+} else {
+    int inicio, fim;
+
+    while (true) {
+        try {
+            System.out.println("Digite o indice inicial: ");
+            inicio = teclado.nextInt();
+
+            System.out.println("Digite o indice final: ");
+            fim = teclado.nextInt();
+
+            if (inicio >= 0 && fim >= inicio && fim < distribuidor.getVetor().size()) {
+                break;
             }
-            if (printOpcao == 1) {
-                System.out.println("Vetor ordenado: ");
-                for (int i = 0; i < distribuidor.vetor.size(); i++) {
-                    System.out.print(distribuidor.vetor.get(i) + " ");
-                    if ((i + 1) % 25 == 0) { // quebra de linha a cada 25 elementos para melhor visualização
-                        System.out.println();
-                    }
-                }
-            }
+
+            System.out.println("Intervalo invalido.");
+        } catch (InputMismatchException ex) {
+            System.out.println("Digite valores inteiros validos.");
+            teclado.nextLine();
+        }
+    }
+
+    for (int i = inicio; i <= fim; i++) {
+        System.out.print(distribuidor.getVetor().get(i) + " ");
+    }
+}
             while (true) {
                 try {
                     System.out.println(

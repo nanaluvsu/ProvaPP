@@ -32,9 +32,12 @@ Em suma, cada thread ordenadora ordena a parte que lhe cabe recursivamente pelo 
 
 - Ofereça ao usuário, ao final do processo, a opção de decidir printar todo o vetor ordenado ou a parte que decidir printar dele.
   
-> Parcialmente Feito
+> Feito
 
 - Capture e trate exceções adequadamente.
+
+> Feito
+
 - Use ```join()```  para aguardar a finalização das threads.
 
 > Feito
