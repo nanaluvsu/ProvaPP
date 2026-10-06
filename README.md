@@ -1,6 +1,6 @@
 # Sobre a prova
 
-## Grupo: 08
+## Grupo: 02
 
 ### RAs
 
