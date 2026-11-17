@@ -67,5 +67,14 @@ Um computador irá rodar o cliente, e o outro irá rodar o servidor(vetor será 
 **O CLIENTE** escolhe se o vetor será digitado manualmente ou gerado aleatoriamente.
 
 Se os computadores do sistema distribuído tiverem características diferentes (muito provavelmente serão), é provável que o de melhor desempenho terá que esperar o de pior desempenho terminar. Por isso, é sugerido dividir o menor segmento para o de pior desempenho e o maior segmento para o de melhor desempenho).
+
+### Processo
+Cliente envia vetor -> Servidores recebem -> Vetor é dividido em 2 partes, 1 para cada servidor -> Cada servidor divide o seu segmento em segmentos menores e depois faz merge (1ª etapa)
+PedidoMerge
+PedidoOrdenado
+PedidoRecebeMerge
+PedidoEnvioOrdenado (Recebe vetor ordenado dos servidores com vetor pronto)
+
+
 )),
 > Feio
