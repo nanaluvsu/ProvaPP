@@ -52,33 +52,19 @@ Em suma, cada thread ordenadora ordena a parte que lhe cabe recursivamente pelo 
 
 - Meça os tempos de execução de ambos os programas para fins de comparação.
 
-## 2ª prova
+> Feito
 
-Transformar o programa em um programa distribuído. A origem do vetor não será entrada de teclado nem geração aleatória: Vem de transmissão do cliente. 
+---
 
-Parte do servidor(maior parte) já está implementada.
+## 2ª parte
+### Fluxo (apenas para organização mental)
+1. Cliente: Solicita o tamanho do vetor e a população de forma manual ou automática.
+2. Resto de Distribuidor vira um servidor em execução em várias máquinas, recebendo de Cliente um segmento do vetor mencionado em **1.** e o ordenando PARALELAMENTE, como na parte 1.
+3. A main do servidor **deve iniciar a thread AceitadoraDeConexao para então esperar a digitação do comando desativar** que, se for digitado, encerrará a conexão do servidor.
+4. A thread AceitadoraDeConexao **deverá iniciar a thread SupervisoraDeConexao e então esperar seu encerramento**, usando o método ```join```.
+5. A thread SupervisoraDeConexao deverá atender às mensagens(**herdando da classe Comunicado**) solicitando **ordenação ou merge**, além de **resultado de ordenação e resultado de merge**, que serão respondidas com mensagens indicando **ordenação pronta, merge pronto e o resultado em si de uma ordenação ou merge, classe que deverá conter um vetor(vetor resultante).**
+6. **ESSE SERVIDOR DEVERÁ ATENDER APENAS A UM CLIENTE em um dado momento**(por isso o uso do ```join```), embora possa atender em sequência outro Cliente que eventualmente rode e solicite conexão após o Cliente anterior haver mandado mensagem informando que está encerrando o uso do servidor.
 
-Alterações a serem feitas(por agora):
-- Aceitar conexão e receber vetor do cliente (Trazer um computador para cada pessoa da equipe na apresentação)
-- Remover entrada de teclado
-- Remover geração aleatória
+### Como executar?
 
-Um computador irá rodar o cliente, e o outro irá rodar o servidor(vetor será maior que o usado na última apresentação)
-**O CLIENTE** escolhe se o vetor será digitado manualmente ou gerado aleatoriamente.
-
-Se os computadores do sistema distribuído tiverem características diferentes (muito provavelmente serão), é provável que o de melhor desempenho terá que esperar o de pior desempenho terminar. Por isso, é sugerido dividir o menor segmento para o de pior desempenho e o maior segmento para o de melhor desempenho).
-
-### Processo
-Cliente envia vetor -> Servidores recebem -> Vetor é dividido em 2 partes, 1 para cada servidor -> Cada servidor divide o seu segmento em segmentos menores e depois faz merge (1ª etapa)
-
-PedidoMerge
-
-PedidoOrdenado
-
-PedidoRecebeMerge
-
-PedidoEnvioOrdenado (Recebe vetor ordenado dos servidores com vetor pronto)
-
-
-)),
-> Feio
+```javac *.java; java -Xmx8G Cliente```
