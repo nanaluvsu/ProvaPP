@@ -70,9 +70,13 @@ Se os computadores do sistema distribuído tiverem características diferentes (
 
 ### Processo
 Cliente envia vetor -> Servidores recebem -> Vetor é dividido em 2 partes, 1 para cada servidor -> Cada servidor divide o seu segmento em segmentos menores e depois faz merge (1ª etapa)
+
 PedidoMerge
+
 PedidoOrdenado
+
 PedidoRecebeMerge
+
 PedidoEnvioOrdenado (Recebe vetor ordenado dos servidores com vetor pronto)
 
 
