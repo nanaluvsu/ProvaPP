@@ -20,7 +20,8 @@ public class Servidor
                 break;
         }
 
-        a.desativar();
-        a.join();
+        // Desativa o servidor
+        //a.desativar();
+        //a.join();
     }
 }

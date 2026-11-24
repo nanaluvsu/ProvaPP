@@ -68,3 +68,6 @@ Em suma, cada thread ordenadora ordena a parte que lhe cabe recursivamente pelo 
 ### Como executar?
 
 ```javac *.java; java -Xmx8G Cliente```
+
+> Nota sobre o envio parcial:
+    O código enviado aqui NÃO foi testado.
