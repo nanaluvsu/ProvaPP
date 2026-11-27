@@ -1,9 +1,13 @@
 import java.util.Vector;
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
+//Processadora agora recebe a conexão com o cliente
 
 public class Processadora extends Thread { // Classes processadoras são as ordenadoras, que recebem um vetor e ordenam
                                            // uma parte dele.
     private Vector<Byte> vetor;
+    private String host;
+    private int porta;
     private int inicio;
     private int fim;
     private long duracao;
@@ -20,7 +24,12 @@ public class Processadora extends Thread { // Classes processadoras são as orde
         7. Os elementos dos vetores esq e dir são comparados e o menor elemento é colocado de volta no vetor original.
         8. O processo continua até que todos os elementos de esq e dir tenham sido colocados de volta no vetor original, resultando em um vetor ordenado: [1, 2, 5, 5, 6, 9].
     */
-    public Processadora(Vector<Byte> vetor, int inicio, int fim) {
+    public Processadora(String host, int porta, Vector<Byte> vetor, int inicio, int fim) throws Exception{
+        if (host == null) {
+            throw new Exception("Erro: Host não informado / não recebido.");
+        }
+        this.host = host;
+        this.porta = porta;
         this.vetor = vetor;
         this.inicio = inicio;
         this.fim = fim;
@@ -93,12 +102,16 @@ public class Processadora extends Thread { // Classes processadoras são as orde
 
     @Override
     public void run() {
-        long inicioTempo = System.currentTimeMillis();
-        mergeSort(vetor, inicio, fim - 1);
-        long fimTempo = System.currentTimeMillis();
-        long duracao = fimTempo - inicioTempo;
-        this.duracao = duracao;
-        System.out.println(getName() + " ordenou [" + inicio + ", " + (fim - 1) + "]");
+        try {
+            long inicioTempo = System.currentTimeMillis();
+            mergeSort(vetor, inicio, fim - 1);
+            long fimTempo = System.currentTimeMillis();
+            long duracao = fimTempo - inicioTempo;
+            this.duracao = duracao;
+            System.out.println(getName() + " ordenou [" + inicio + ", " + (fim - 1) + "]");
+        } catch (Exception ex) {
+            System.err.println("Falha com a thread processadora " + this.host +":" + this.porta);
+        }
         
     }
 }

@@ -20,7 +20,8 @@ public class Rating {
     private int size; //array size
     private int n; // amount of PCs
     private int[] host_ports; // hosts + ports
-    Vector<Byte> vetor = new Vector<>();
+    private Socket[] sockets; // conexões com os servidores
+    private Vector<Byte> vetor = new Vector<>();
 
     public int getSize() {
         return size;
@@ -36,6 +37,12 @@ public class Rating {
     }
     private String[] addrs = new String[this.getN()];
 
+    public Vector<Byte> getVetor() {
+        return vetor;
+    }
+    public void setVetor(Vector<Byte> vetor) {
+        this.vetor = vetor;
+    }
     public Rating() {
         for (int i = 0; i < (this.getN() - 1); i++) {
             
@@ -51,7 +58,6 @@ public class Rating {
 
         System.out.println("Valores adicionados com sucesso.");
         sc.close();
-
     }
 
 }
